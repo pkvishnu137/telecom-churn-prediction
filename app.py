@@ -842,9 +842,14 @@ elif page == "📁  Batch Prediction":
                 return "color:#10b981"
             except: return ""
 
-        styled = (display_df.style
-                  .applymap(color_risk_cell, subset=["Risk_Tier"])
-                  .applymap(color_prob, subset=["Churn_Probability"]))
+        try:
+            styled = (display_df.style
+                      .map(color_risk_cell, subset=["Risk_Tier"])
+                      .map(color_prob, subset=["Churn_Probability"]))
+        except AttributeError:
+            styled = (display_df.style
+                      .applymap(color_risk_cell, subset=["Risk_Tier"])
+                      .applymap(color_prob, subset=["Churn_Probability"]))
         st.dataframe(styled, use_container_width=True, height=440)
 
         csv_out = res.to_csv(index=False).encode("utf-8")
